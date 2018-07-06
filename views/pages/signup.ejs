@@ -1,0 +1,29 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); -%>
+
+    <title>Sign-up form</title>
+
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+<form class="form-signin" id="signup" name="signup" method="post" action="signup">
+    <img class="mb-4" src="https://getbootstrap.com/docs/4.1/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+    <label for="inputUsername" class="sr-only">Username</label>
+    <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Username" required>
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+    <button class="btn btn-dark" type="submit">Sign un</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+</form>
+</body>
+</html>

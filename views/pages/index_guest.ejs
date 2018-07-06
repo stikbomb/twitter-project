@@ -1,0 +1,30 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/sticky-footer-navbar.css" rel="stylesheet">
+    <%- include('../partials/head'); -%>
+    <title>Main page</title>
+</head>
+
+<body>
+
+<%- include('../partials/header_guest'); %>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+    <ul class="list-group">
+        <% items.forEach((item) => {
+        %>
+            <li class="list-group-item"><%= item.text %></li>
+        <%
+        })%>
+    </ul>
+
+</main>
+
+<%- include('../partials/footer'); -%>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/sticky-footer-navbar.css" rel="stylesheet">
+    <%- include('../partials/head'); -%>
+    <title>Main page</title>
+
+</head>
+
+<body>
+<script>
+    function validateForm() {
+        if (document.getElementById("itemText").value.length > 255) {
+            alert('Maximum 255 characters for this form');
+            return false;
+        }
+    }
+</script>
+
+<%- include('../partials/header_user'); %>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+    <form  id="addItemt" name="addItem" method="post" action="/addItem">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Put your text</label>
+            <textarea class="form-control" name="itemText" id="itemText" rows="3"></textarea>
+            <input class="btn btn-dark" type="submit" value="Submit" onclick="return validateForm()">
+        </div>
+    </form>
+    <main role="main" class="container">
+        <ul class="list-group">
+            <% items.forEach((item) => {
+            %>
+            <li class="list-group-item"><%= item.text %></li>
+            <%
+            })%>
+        </ul>
+
+    </main>
+</main>
+
+<%- include('../partials/footer'); -%>
+
+</body>
+</html>
