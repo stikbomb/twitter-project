@@ -40,11 +40,11 @@ exports.index = function (req, res) {
     if (req.isAuthenticated()) {
         // var sessionId = req.user.id;
         // var userId = req.params.id;
-        models.item.findAll().then(items => {
+        models.item.findAll({limit : 10}).then(items => {
             res.render('./pages/index_user', {items : items, userId : req.user.id});
         });
     } else {
-        models.item.findAll().then(items => {
+        models.item.findAll({limit :10}).then(items => {
             res.render('./pages/index_guest', {items});
         });
     }
@@ -155,3 +155,4 @@ exports.editItema = (req, res) => {
         console.log("Project update failed !");
     })
 };
+
