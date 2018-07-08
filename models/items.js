@@ -18,6 +18,18 @@ module.exports = function(sequelize, Sequelize) {
 
         userName: {
             type: Sequelize.TEXT,
+        },
+
+        retweet: {
+            type: Sequelize.INTEGER,
+        },
+
+        orUserName: {
+            type: Sequelize.TEXT,
+        },
+
+        orCreatedAt: {
+            type: Sequelize.DATE,
         }
 
     });

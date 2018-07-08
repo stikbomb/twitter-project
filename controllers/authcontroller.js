@@ -156,3 +156,17 @@ exports.editItema = (req, res) => {
     })
 };
 
+exports.retweetItem = (req, res) => {
+    var index = req.params.item;
+    models.item.findOne({where : {id : index}}).then(item => {
+    models.item.create({
+        userId: req.user.id,
+        orUserName: item.userName,
+        orCreatedAt: item.createdAt,
+        text: item.text,
+        userName: req.user.username,
+        retweet: 1
+    })}).then(items => {
+        res.redirect('/')
+    })
+};

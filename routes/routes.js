@@ -69,4 +69,6 @@ module.exports = function(app, passport) {
                 res.status(500).send('Internal Server Error');
             });
     });
+
+    app.get('/retweet/:item', authController.retweetItem)
 };
