@@ -1,0 +1,66 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/sticky-footer-navbar.css" rel="stylesheet">
+    <%- include('../partials/head'); -%>
+    <title>Main page</title>
+
+</head>
+
+<body>
+<script>
+    function validateForm() {
+        if (document.getElementById("itemText").value.length > 255) {
+            alert('Maximum 255 characters for this form');
+            return false;
+        }
+    }
+</script>
+
+<%- include('../partials/header_user'); %>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+    <%var itemIndex = "/edit/" + oldContent.id%>
+    <form  id="addItemt" name="addItem" method="post" action= "<%= itemIndex %>">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Put your text</label>
+            <textarea class="form-control" name="itemText" id="itemText" rows="3">
+                    <%=oldContent.text%>
+            </textarea>
+            <input class="btn btn-dark" type="submit" value="Edit" onclick="return validateForm()">
+            <form action="/">
+                <button class="btn btn-dark" type="submit">Exit</button>
+        </div>
+    </form>
+    <main role="main" class="container">
+        <ul class="list-group">
+            <% for(var i=items.length-1; i >= 0; i--) {%>
+            <% if (items[i].userId == userId) {%>
+            <li class="list-group-item">
+                <i><%= items[i].createdAt%> by <b><%= items[i].userName%></b></i>
+                <br>
+                <%= items[i].text %>
+                <br>
+                <% var edit = "edit/" + items[i].id%>
+                <a href=<%=edit%> class="btn btn-default"><span class="fas fa-pencil-alt"></span>Edit</a>
+            </li>
+            <% } else {%>
+            <li class="list-group-item">
+                <i><%= items[i].createdAt%> by <b><%= items[i].userName%></b></i>
+                <br>
+                <%= items[i].text %>
+            </li>
+            <% } %>
+            <% } %>
+        </ul>
+
+    </main>
+</main>
+
+<%- include('../partials/footer'); -%>
+
+</body>
+</html>

@@ -23,6 +23,8 @@ module.exports = function(app, passport) {
 
     ));
 
+    app.get('/user/:id', authController.user);
+
     app.post('/addItem', isLoggedIn, authController.addItem);
 
     function isLoggedIn(req, res, next) {
@@ -34,4 +36,8 @@ module.exports = function(app, passport) {
         res.redirect('/signin');
 
     }
+
+    app.get('/edit/:item', authController.editItem);
+
+    app.post('/edit/:item', authController.editItema);
 };

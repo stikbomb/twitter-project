@@ -16,6 +16,10 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.INTEGER,
         },
 
+        userName: {
+            type: Sequelize.TEXT,
+        }
+
     });
 
     return Item;
