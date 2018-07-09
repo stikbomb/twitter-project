@@ -170,3 +170,15 @@ exports.retweetItem = (req, res) => {
         res.redirect('/')
     })
 };
+
+exports.validateUser = (req, res, next) => {
+    var index = req.params.item;
+    models.item.findOne({ where: {id : index}}).then(item => {
+            if (item.userId === req.user.id) {
+                return next();
+            } else {
+                res.redirect('/');
+            }
+        }
+    )
+};
