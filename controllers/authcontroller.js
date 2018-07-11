@@ -171,14 +171,50 @@ exports.retweetItem = (req, res) => {
     })
 };
 
-exports.validateUser = (req, res, next) => {
-    var index = req.params.item;
-    models.item.findOne({ where: {id : index}}).then(item => {
-            if (item.userId === req.user.id) {
-                return next();
+exports.messagePage = (req, res) => {
+    return models.sequelize.Promise.all([
+        models.item.findAll({
+            where: {parentId: req.params.id}
+        }),
+        models.item.findOne({
+            where: {id: req.params.id}
+        })
+    ])
+        .spread((items, item) => {
+            console.log("THIS" + items);
+            console.log(item);
+            if (req.isAuthenticated()) {
+                return res.render('./pages/message_user', {
+                    items: items,
+                    item: item,
+                });
             } else {
-                res.redirect('/');
+                return res.render('./pages/message_guest', {
+                    items: items,
+                    item: item,
+                })
             }
-        }
-    )
+        })
 };
+
+exports.addAnswer = function(req, res) {
+    var data =
+
+        {
+            parentId: req.params.id,
+
+            text: req.body.answerText,
+
+            userId: req.user.id,
+
+            userName: req.user.username,
+        };
+
+    models.item.create(data).then(item => {
+        console.log(item.get('text'));
+
+    });
+    res.redirect('/');
+};
+
+

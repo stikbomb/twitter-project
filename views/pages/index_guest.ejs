@@ -23,12 +23,14 @@
             <blockquote class="blockquote">
                 <i><%=items[i].orCreatedAt%> by <b> <%=items[i].orUserName%> </b></i>
                 <br>
-                <%= items[i].text %>
+                <%var link = "/message/" + items[i].id%>
+                <a href="<%=link%>"><%= items[i].text %> </a>
             </blockquote>
             <%} else {%>
             <i><%= items[i].createdAt%> by <b><%= items[i].userName%></b></i>
             <br>
-            <%= items[i].text %>
+            <%var link = "/message/" + items[i].id%>
+            <a href="<%=link%>"><%= items[i].text %> </a>
             <%}%>
         </li>
         <% } %>

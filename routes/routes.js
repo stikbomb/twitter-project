@@ -2,6 +2,9 @@ var authController = require('../controllers/authcontroller.js');
 var models = require('../models');
 module.exports = function(app, passport) {
 
+    app.get('/test', function (req, res) {
+        res.render('./pages/test')
+    })
     app.get('/signup', authController.signup);
 
     app.get('/signin', authController.signin);
@@ -37,11 +40,9 @@ module.exports = function(app, passport) {
 
     }
 
+    app.get('/edit/:item', authController.editItem);
 
-
-    app.get('/edit/:item', authController.validateUser, authController.editItem);
-
-    app.post('/edit/:item', authController.validateUser,  authController.editItema);
+    app.post('/edit/:item', authController.editItema);
 
     app.get('/:page', (req, res) => {
         let limit = 10;   // number of records per page
@@ -58,6 +59,7 @@ module.exports = function(app, passport) {
                     $sort: { id: 1 }
                 })
                     .then((items) => {
+                        // res.status(200).json({'result': items, 'count': data.count, 'pages': pages});
                         console.log(items + "   " + data.count + "     " + pages);
                         if (req.isAuthenticated()) {
                             res.render('./pages/pagination_user', {items: items, current: page, pages: pages});
@@ -71,5 +73,9 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/retweet/:item', authController.retweetItem)
+    app.get('/retweet/:item', authController.retweetItem);
+
+    app.get('/message/:id', authController.messagePage);
+
+    app.post('/message/:id', authController.addAnswer);
 };

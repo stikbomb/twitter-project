@@ -30,6 +30,10 @@ module.exports = function(sequelize, Sequelize) {
 
         orCreatedAt: {
             type: Sequelize.DATE,
+        },
+
+        parentId: {
+            type: Sequelize.INTEGER
         }
 
     });

@@ -1,0 +1,56 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/sticky-footer-navbar.css" rel="stylesheet">
+    <%- include('../partials/head'); -%>
+    <title>Main page</title>
+</head>
+
+<body>
+
+<%- include('../partials/header_guest'); %>
+
+<!-- Begin page content -->
+<main role="main" class="container">
+    <div class="card">
+        <div class="card-header">
+            Featured
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"><i><%= item.createdAt%> by <b><%= item.userName%></b></i></h5>
+            <p class="card-text"><%= item.text%></p>
+        </div>
+    </div>
+    <h2> Ответы </h2>
+    <%var messageID = "/message/"+item.id%>
+    <form  id="addItemt" name="addItem" method="post" action="<%messageID%>">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Put your text</label>
+            <textarea class="form-control" name="answerText" id="answerText" rows="3"></textarea>
+            <input class="btn btn-dark" type="submit" value="Submit">
+        </div>
+    </form>
+    <div>
+        <%if(items.length !== 0) {%>
+        <ul class="list-group">
+            <% for(var i=items.length-1; i >= 0; i--) {%>
+            <li class="list-group-item">
+                <i><%= items[i].createdAt%> by <b><%= items[i].userName%></b></i>
+                <br>
+                <%= items[i].text %>
+            <% } %>
+        </ul>
+        <% } else { %>
+        <p> На это сообщение еще никто не ответил =( </p>
+        <% } %>
+    </div>
+
+</main>
+
+
+<%- include('../partials/footer'); -%>
+
+</body>
+</html>
