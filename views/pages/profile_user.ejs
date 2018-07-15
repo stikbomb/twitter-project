@@ -8,6 +8,7 @@
     <link href="/stylesheets/form.css" rel="stylesheet">
     <%- include('../partials/head'); -%>
     <title>Main page</title>
+
 </head>
 
 <body>
@@ -16,19 +17,22 @@
 <%- include('../partials/header_user'); %>
 
 <!-- Begin page content -->
-
 <main role="main" class="container">
-
-    <%- include('../partials/parts/form_message')%>
-
-    <%- include('../partials/parts/list_allMessages')%>
-        <p><a href="/1"> View all tweets >></a> </p>
+    <h2>Hello, <%=user.username%>!</h2>
+    <h3>Do you want to change your username?</h3>
+    <form  class="cmxform" id="newName" name="newName" method="post" action= "/profile">
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Put your new name</label>
+            <textarea class="form-control" name="answerText" id="answerText" rows="1"></textarea>
+            <input class="btn btn-dark" type="submit" value="Submit">
+        </div>
+    </form>
 </main>
+
 
 <%- include('../partials/footer'); -%>
 <%- include('../partials/bootstraplinks'); -%>
 <script src="/js/jquery.validate.js"></script>
-<script src="/js/form-validate.js"></script>
-
+<script src="/js/username-validate.js"></script>
 </body>
 </html>

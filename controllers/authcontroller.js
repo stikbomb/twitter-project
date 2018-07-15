@@ -1,7 +1,14 @@
 
-var Item = require('../models/items');
 var models = require('../models');
 var exports = module.exports = {};
+
+models.item.hasMany(models.user, {foreignKey: 'id', sourceKey: 'userId'});
+models.item.hasMany(models.user, {foreignKey: 'id', sourceKey: 'orUserId'});
+
+
+// models.item.belongsToMany(models.user, { as: 'usId', through: 'UserProject'});
+// models.user.belongsToMany(models.item, { as: 'itId', through: 'UserProject'});
+
 exports.signup = function(req, res) {
 
     res.render('./pages/signup');
@@ -37,14 +44,33 @@ exports.signin = function(req, res) {
 // };
 
 exports.index = function (req, res) {
+    // models.user.belongsTo(models.item, {foreignKey: 'id', targetKey: 'userId'});
+    //
+
     if (req.isAuthenticated()) {
         // var sessionId = req.user.id;
         // var userId = req.params.id;
-        models.item.findAll({limit : 10}).then(items => {
+        models.item.findAll({
+            limit : 10,
+            include: [{
+                model: models.user,
+                where: {
+                    id: models.Sequelize.col('item.userId')},
+                attributes: ['username']}]}).then(items => {
             res.render('./pages/index_user', {items : items, userId : req.user.id});
         });
     } else {
-        models.item.findAll({limit :10}).then(items => {
+        models.item.findAll({
+            limit : 10,
+
+            include: [{
+                model: models.user,
+                where: {
+                    id: models.Sequelize.col('item.userId')},
+                attributes: ['username']}]}).then(items => {
+        var newIndex = JSON.stringify(items);
+        console.log(items);
+        console.log(newIndex);
             res.render('./pages/index_guest', {items});
         });
     }
@@ -65,9 +91,7 @@ exports.addItem = function(req, res) {
         {
             userId: req.user.id,
 
-            text: req.body.itemText,
-
-            userName: req.user.username,
+            text: req.body.itemText
         };
 
     console.log(req.user.username);
@@ -80,17 +104,29 @@ exports.addItem = function(req, res) {
 };
 
 exports.user = function (req, res) {
-    models.item.findAll({ where: {userId: req.params.id}}).then(items => {
-        if (req.params.id == req.user.id) {
-            res.render('./pages/user_user', {items : items, userId : req.user.id});
-            console.log('YEAH')
+
+    models.item.findAll(
+        {limit : 10,
+        include: [
+            {model: models.user,
+            where: {id: models.Sequelize.col('item.userId')},
+            attributes: ['username']}],
+        where: {userId: req.params.id}
+        }).then(items => {
+        if (req.isAuthenticated()) {
+            if(req.params.id == req.user.id) {
+                res.render('./pages/user_user_self', {items: items, userId: req.user.id});
+                console.log('YEAH')
+            } else {
+                res.render('./pages/user_user', {items: items, userId: req.user.id});
+                console.log('YEAH')
+            }
         }
         else {
-            res.render('./pages/user_guest', {items : items, userId : req.user.id});
+            res.render('./pages/user_guest', {items : items});
             console.log('Nonono');
         }
     })
-
 };
 
 // exports.editItem = function(req, res) {
@@ -161,10 +197,9 @@ exports.retweetItem = (req, res) => {
     models.item.findOne({where : {id : index}}).then(item => {
     models.item.create({
         userId: req.user.id,
-        orUserName: item.userName,
+        orUserId: item.userId,
         orCreatedAt: item.createdAt,
         text: item.text,
-        userName: req.user.username,
         retweet: 1
     })}).then(items => {
         res.redirect('/')
@@ -174,12 +209,28 @@ exports.retweetItem = (req, res) => {
 exports.messagePage = (req, res) => {
     return models.sequelize.Promise.all([
         models.item.findAll({
-            where: {parentId: req.params.id}
+            where: {parentId: req.params.id},
+            include: [
+                {
+                    model: models.user,
+                    where: {id: models.Sequelize.col('item.userId')},
+                    attributes: ['username']
+                }]
         }),
         models.item.findOne({
-            where: {id: req.params.id}
+            where: {id: req.params.id},
+            include: [
+                {
+                    model: models.user,
+                    where: {id: models.Sequelize.col('item.userId')},
+                    attributes: ['username']
+                }],
+
+
         })
     ])
+
+
         .spread((items, item) => {
             console.log("THIS" + items);
             console.log(item);
@@ -187,34 +238,93 @@ exports.messagePage = (req, res) => {
                 return res.render('./pages/message_user', {
                     items: items,
                     item: item,
+                    userId: req.user.id
                 });
             } else {
                 return res.render('./pages/message_guest', {
                     items: items,
                     item: item,
+                    userId: req.user.id
                 })
             }
         })
 };
 
 exports.addAnswer = function(req, res) {
-    var data =
+    models.item.findOne({where: {id: req.params.id}}).then(item => {
+        console.log('Test');
+        console.log(item);
+        var data =
 
-        {
-            parentId: req.params.id,
+            {
+                parentId: req.params.id,
 
-            text: req.body.answerText,
+                text: req.body.answerText,
 
-            userId: req.user.id,
+                userId: req.user.id,
 
-            userName: req.user.username,
-        };
-
-    models.item.create(data).then(item => {
-        console.log(item.get('text'));
-
+                orUserId: item.userId
+                };
+        models.item.create(data).then(newitem => {
+            console.log(newitem);
+            res.redirect('/');
+        })
     });
-    res.redirect('/');
+
 };
 
+
+
+
+exports.profile = function (req, res) {
+    models.user.findOne({where: {id: req.user.id}}).then(user => {
+        res.render("./pages/profile_user", {user : user});
+    })
+};
+
+exports.profileUpdate = function (req, res) {
+    console.log(req.body.answerText);
+    models.user.update(
+
+        {username : req.body.answerText},
+        {where : {id : req.user.id}}).then(function() {
+
+        console.log("Username was updated successfully!");
+        res.redirect('/');
+    }).catch(function(e) {
+        console.log("Username update failed !");
+    })
+};
+
+exports.pagination = function (req, res) {
+    let limit = 10;   // number of records per page
+    let offset = 0;
+    models.item.hasMany(models.user, {foreignKey: 'id', sourceKey: 'userId'});
+    models.item.findAndCountAll()
+        .then((data) => {
+            let page = req.params.page;      // page number
+            let pages = Math.ceil(data.count / limit);
+            offset = limit * (page - 1);
+            models.item.findAll({
+                subQuery: false,
+                attributes: ['id', 'text', 'createdAt', 'userId'],
+                limit: limit,
+                offset: offset,
+                $sort: { id: 1 },
+                include: [{model: models.user, where: {id: models.Sequelize.col('item.userId')}, attributes: ['username']}]
+            })
+                .then((items) => {
+                    // res.status(200).json({'result': items, 'count': data.count, 'pages': pages});
+                    console.log(items + "   " + data.count + "     " + pages);
+                    if (req.isAuthenticated()) {
+                        res.render('./pages/pagination_user', {items: items, current: page, pages: pages, userId: req.user.id});
+                    } else {
+                        res.render('./pages/pagination_guest', {items: items, current: page, pages: pages});
+                    }
+                });
+        })
+        .catch(function (error) {
+            res.status(500).send('Internal Server Error');
+        });
+};
 

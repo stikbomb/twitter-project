@@ -2,9 +2,7 @@ var authController = require('../controllers/authcontroller.js');
 var models = require('../models');
 module.exports = function(app, passport) {
 
-    app.get('/test', function (req, res) {
-        res.render('./pages/test')
-    })
+
     app.get('/signup', authController.signup);
 
     app.get('/signin', authController.signin);
@@ -44,38 +42,15 @@ module.exports = function(app, passport) {
 
     app.post('/edit/:item', authController.editItema);
 
-    app.get('/:page', (req, res) => {
-        let limit = 10;   // number of records per page
-        let offset = 0;
-        models.item.findAndCountAll()
-            .then((data) => {
-                let page = req.params.page;      // page number
-                let pages = Math.ceil(data.count / limit);
-                offset = limit * (page - 1);
-                models.item.findAll({
-                    attributes: ['id', 'text', 'userName', 'createdAt'],
-                    limit: limit,
-                    offset: offset,
-                    $sort: { id: 1 }
-                })
-                    .then((items) => {
-                        // res.status(200).json({'result': items, 'count': data.count, 'pages': pages});
-                        console.log(items + "   " + data.count + "     " + pages);
-                        if (req.isAuthenticated()) {
-                            res.render('./pages/pagination_user', {items: items, current: page, pages: pages});
-                        } else {
-                            res.render('./pages/pagination_guest', {items: items, current: page, pages: pages});
-                        }
-                    });
-            })
-            .catch(function (error) {
-                res.status(500).send('Internal Server Error');
-            });
-    });
+    app.get('/profile', authController.profile);
+    app.post('/profile', authController.profileUpdate);
+
+    app.get('/:page', authController.pagination);
 
     app.get('/retweet/:item', authController.retweetItem);
 
     app.get('/message/:id', authController.messagePage);
 
     app.post('/message/:id', authController.addAnswer);
+
 };

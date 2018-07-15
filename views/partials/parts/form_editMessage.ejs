@@ -1,0 +1,12 @@
+<%var itemIndex = "/edit/" + oldContent.id%>
+<form  id="addItemt" name="addItem" method="post" action= "<%= itemIndex %>">
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Put your text</label>
+        <textarea class="form-control" name="itemText" id="itemText" rows="3">
+                    <%=oldContent.text%>
+            </textarea>
+        <input class="btn btn-dark" type="submit" value="Edit" onclick="return validateForm()">
+        <form action="/">
+            <button class="btn btn-dark" type="submit">Exit</button>
+    </div>
+</form>

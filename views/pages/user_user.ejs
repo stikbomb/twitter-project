@@ -16,28 +16,7 @@
 
 <!-- Begin page content -->
 <main role="main" class="container">
-    <form  id="addItemt" name="addItem" method="post" action="/addItem">
-        <div class="form-group">
-            <label for="exampleFormControlTextarea1">Put your text</label>
-            <textarea class="form-control" name="itemText" id="itemText" rows="3"></textarea>
-            <input class="btn btn-dark" type="submit" value="Submit" onclick="return validateForm()">
-        </div>
-    </form>
-    <main role="main" class="container">
-        <ul class="list-group">
-            <% for(var i=items.length-1; i >= 0; i--) {%>
-            <li class="list-group-item">
-                <i><%= items[i].createdAt%> by <b><%= items[i].userName%></b></i>
-                <br>
-                <%var link = "/message/" + items[i].id%>
-                <a href="<%=link%>"><%= items[i].text %> </a>
-                <br>
-                <% var edit = "edit/" + items[i].id%>
-                <a href=<%=edit%> class="btn btn-default"><span class="fas fa-pencil-alt"></span>Edit</a></li>
-            <% } %>
-        </ul>
-
-    </main>
+    <%- include('../partials/parts/list_allMessages')%>
 </main>
 
 

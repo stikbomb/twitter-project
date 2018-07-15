@@ -8,6 +8,9 @@ var config = require(path.join(__dirname, '..', 'config', 'config.json'))[env];
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db = {};
 
+// var models = require('../models');
+// models.item = require('./items');
+// models.user = require('./users');
 
 fs
     .readdirSync(__dirname)
@@ -30,3 +33,4 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+

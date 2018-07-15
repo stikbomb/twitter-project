@@ -16,16 +16,12 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.INTEGER,
         },
 
-        userName: {
-            type: Sequelize.TEXT,
-        },
-
         retweet: {
             type: Sequelize.INTEGER,
         },
 
-        orUserName: {
-            type: Sequelize.TEXT,
+        orUserId: {
+            type: Sequelize.INTEGER,
         },
 
         orCreatedAt: {
