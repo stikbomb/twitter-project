@@ -1,20 +1,26 @@
+<%var options = {hour24: 'true', weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric', hour: "numeric", minute: "numeric" };%>
 <ul class="list-group">
     <% for(var i=items.length-1; i >= 0; i--) {%>
     <li class="list-group-item">
         <%if (items[i].retweet == 1) {%>
-        <i><%= items[i].createdAt%> by <b><%= items[i].users[0].username%></b></i> <span class="badge badge-secondary">retweet</span>
+        <i><%= items[i].createdAt.toLocaleDateString("ru", options)%> by <b><%= items[i].users[0].username%></b></i> <span class="badge badge-secondary">retweet</span>
         <br>
-        <blockquote class="blockquote">
-            <i><%=items[i].orCreatedAt%> by <b> <%=items[i].orUserName%> </b></i>
-            <br>
-            <%var link = "/message/" + items[i].id%>
-            <a href="<%=link%>"><%= items[i].text %> </a>
-        </blockquote>
+        <a href="/message/<%=items[i].id%>" class="custom-card">
+            <div class="card" style="width:auto;">
+                <div class="card-body">
+                    <p class="card-text"><%= items[i].text %></p>
+                </div>
+            </div>
+        </a>
+        <%var link = "/message/" + items[i].id%>
+        <a href=<%=link%> class="btn btn-default"><span class="fas fa-comments"></span></a>
         <%} else {%>
-        <i><%= items[i].createdAt%> by <b><%= items[i].users[0].username%></b></i>
+        <i><%= items[i].createdAt.toLocaleDateString("ru", options)%> by <b><%= items[i].users[0].username%></b></i>
         <br>
         <%var link = "/message/" + items[i].id%>
-        <a href="<%=link%>"><%= items[i].text %> </a>
+        <%= items[i].text %>
+        <br>
+        <a href=<%=link%> class="btn btn-default"><span class="fas fa-comments"></span></a>
         <%}%>
     </li>
     <% } %>

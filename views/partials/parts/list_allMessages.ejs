@@ -1,56 +1,73 @@
+<%var options = {hour24: 'true', weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric', hour: "numeric", minute: "numeric" };%>
 
 <ul class="list-group">
-    <ul class="list-group">
-        <% for(var i=items.length-1; i >= 0; i--) {%>
+    <% for(var i=items.length-1; i >= 0; i--) {%>
+
+        <%/*Вывод 'anon', если имя пользователя пустое*/%>
         <% var username; %>
         <% if (items[i].users[0].username == "NULL") {%>
-        <% username = 'anon'%>
+            <% username = 'anon'%>
         <%} else {%>
-        <%username = (items[i].users[0].username)%>
+            <%username = (items[i].users[0].username)%>
         <%}%>
+
+        <%/*Если своё сообщение*/%>
         <% if (items[i].userId == userId) {%>
-        <li class="list-group-item">
-            <%if (items[i].retweet == 1) {%>
-            <% var userAdr = "/profile/"+items[i].userId%>
-            <i><%= items[i].createdAt%> by <a href=<%=userAdr%>><b><%= username%></b></a></i> <span class="badge badge-secondary">retweet</span>
-            <br>
-            <blockquote class="blockquote">
-                <i><%=items[i].orCreatedAt%> by <b> <%=items[i].orUserName%> </b></i>
-                <br>
-                <%= items[i].text %>
-            </blockquote>
-            <%} else {%>
-            <% var userAdr = "/profile/"+items[i].userId%>
-            <i><%= items[i].createdAt%> by <a href=<%=userAdr%>><b><%= username%></b></a></i>
-            <br>
-            <% var link = "/message/" + items[i].id%>
-            <a href="<%=link%>"><%= items[i].text %> </a>
-            <%}%>
-            <br>
-            <% var edit = "edit/" + items[i].id%>
-            <a href=<%=edit%> class="btn btn-default"><span class="fas fa-pencil-alt"></span>Edit</a>
-        </li>
+            <li class="list-group-item">
+                <%/*Если своё сообщение и ретвит*/%>
+                <%if (items[i].retweet == 1) {%>
+                    <% var userAdr = "/profile/"+items[i].userId%>
+                    <i><%= items[i].createdAt.toLocaleDateString("ru", options)%> by <b><%= items[i].users[0].username%></b></i> <span class="badge badge-secondary">retweet</span>
+                    <br>
+                    <a href="/message/<%=items[i].id%>" class="custom-card">
+                        <div class="card" style="width:auto;">
+                            <div class="card-body">
+                                <p class="card-text"><%= items[i].text %></p>
+                            </div>
+                        </div>
+                    </a>
+                    <%var link = "/message/" + items[i].id%>
+                    <a href=<%=link%> class="btn btn-default"><span class="fas fa-comments"></span></a>
+                <%/*Если своё сообщение и не ретвит*/%>
+                <%} else {%>
+                    <i><%= items[i].createdAt.toLocaleDateString("ru", options)%> by <b><%= items[i].users[0].username%></b></i>
+                    <br>
+                    <%var link = "/message/" + items[i].id%>
+                    <%= items[i].text %>
+                    <br>
+                    <a href=<%=link%> class="btn btn-default"><span class="fas fa-comments"></span></a>
+                    <%}%>
+                    <% var edit = "edit/" + items[i].id%>
+                    <a href=<%=edit%> class="btn btn-default"><span class="fas fa-pencil-alt"></span></a>
+            </li>
+        <%/*Если чужое сообщение*/%>
         <% } else {%>
-        <li class="list-group-item">
-            <%if (items[i].retweet == 1) {%>
-            <i><%= items[i].createdAt%> by <b><%= username%></b></i> <span class="badge badge-secondary">retweet</span>
-            <br>
-            <blockquote class="blockquote">
-                <i><%=items[i].orCreatedAt%> by <b> <%=items[i].orUserName%> </b></i>
+            <li class="list-group-item">
+                <%/*Если чужое сообщение и ретвит*/%>
+                <%if (items[i].retweet == 1) {%>
+                <% var userAdr = "/profile/"+items[i].userId%>
+                <i><%= items[i].createdAt.toLocaleDateString("ru", options)%> by <b><%= items[i].users[0].username%></b></i> <span class="badge badge-secondary">retweet</span>
                 <br>
-                <%= items[i].text %>
-            </blockquote>
-            <%} else {%>
-            <i><%= items[i].createdAt%> by <b><%= username%></b></i>
-            <br>
-            <%var link = "/message/" + items[i].id%>
-            <a href="<%=link%>"><%= items[i].text %> </a>
-            <%}%>
-            <br>
-            <% var edit = "retweet/" + items[i].id%>
-            <a href=<%=edit%> class="btn btn-default"><span class="fas fa-retweet"></span>Retweet</a>
-        </li>
+                <a href="message/<%=items[i].id%>" class="custom-card">
+                    <div class="card" style="width:auto;">
+                        <div class="card-body">
+                            <p class="card-text"><%= items[i].text %></p>
+                        </div>
+                    </div>
+                </a>
+                <%/*Если чужое сообщение и не ретвит*/%>
+                <%} else {%>
+                    <i><%= items[i].createdAt.toLocaleDateString("ru", options)%> by <b><%= items[i].users[0].username%></b></i>
+                    <br>
+                    <%var link = "/message/" + items[i].id%>
+                    <%= items[i].text %>
+                    <br>
+                <%}%>
+                <%var link = "/message/" + items[i].id%>
+                <a href=<%=link%> class="btn btn-default"><span class="fas fa-comments"></span></a>
+                <% var edit = "retweet/" + items[i].id%>
+                <a href=<%=edit%> class="btn btn-default"><span class="fas fa-retweet"></span></a>
+            </li>
         <% } %>
-        <% } %>
-    </ul>
+    <% } %>
 </ul>

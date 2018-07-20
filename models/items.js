@@ -20,14 +20,6 @@ module.exports = function(sequelize, Sequelize) {
             type: Sequelize.INTEGER,
         },
 
-        orUserId: {
-            type: Sequelize.INTEGER,
-        },
-
-        orCreatedAt: {
-            type: Sequelize.DATE,
-        },
-
         parentId: {
             type: Sequelize.INTEGER
         }

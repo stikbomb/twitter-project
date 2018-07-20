@@ -3,7 +3,7 @@ var models = require('../models');
 var exports = module.exports = {};
 
 models.item.hasMany(models.user, {foreignKey: 'id', sourceKey: 'userId'});
-models.item.hasMany(models.user, {foreignKey: 'id', sourceKey: 'orUserId'});
+// models.item.hasMany(models.user, {foreignKey: 'id', sourceKey: 'orUserId'});
 
 
 // models.item.belongsToMany(models.user, { as: 'usId', through: 'UserProject'});
@@ -42,6 +42,38 @@ exports.signin = function(req, res) {
 //
 //
 // };
+
+
+// exports.index = (req, res) => {
+//     return models.sequelize.Promise.all([
+//         models.item.findAll({
+//             limit : 10,
+//             include: [{
+//                 model: models.user,
+//                 where: {
+//                     id: models.Sequelize.col('item.userId')},
+//                 attributes: ['username']}]}),
+//         models.item.findAll({
+//             limit : 10,
+//             include: [{
+//                 model: models.user,
+//                 where: {
+//                     id: models.Sequelize.col('item.orUserId')},
+//                 attributes: ['username']}]})
+//     ])
+//         .spread((items, items_r) => {
+//             console.log("THIS! " + items);
+//             console.log(JSON.stringify(items));
+//             console.log("THERE! " + items_r);
+//             console.log(JSON.stringify(items_r));
+//             return res.render('./pages/index_guest', {
+//                 items : items,
+//                 items_r : items_r
+//             });
+//         })
+// };
+
+
 
 exports.index = function (req, res) {
     // models.user.belongsTo(models.item, {foreignKey: 'id', targetKey: 'userId'});
@@ -122,7 +154,7 @@ exports.user = function (req, res) {
                 console.log('YEAH')
             }
         }
-        else {
+         else {
             res.render('./pages/user_guest', {items : items});
             console.log('Nonono');
         }
@@ -157,6 +189,7 @@ exports.editItem = (req, res, next) => {
     ])
         .spread((items, item) => {
             console.log(item);
+            console.log(items);
             return res.render('./pages/user_edit', {
                 items : items,
                 oldContent : item,
@@ -197,8 +230,7 @@ exports.retweetItem = (req, res) => {
     models.item.findOne({where : {id : index}}).then(item => {
     models.item.create({
         userId: req.user.id,
-        orUserId: item.userId,
-        orCreatedAt: item.createdAt,
+        parentId: item.id,
         text: item.text,
         retweet: 1
     })}).then(items => {
@@ -243,8 +275,7 @@ exports.messagePage = (req, res) => {
             } else {
                 return res.render('./pages/message_guest', {
                     items: items,
-                    item: item,
-                    userId: req.user.id
+                    item: item
                 })
             }
         })
@@ -261,9 +292,8 @@ exports.addAnswer = function(req, res) {
 
                 text: req.body.answerText,
 
-                userId: req.user.id,
+                userId: req.user.id
 
-                orUserId: item.userId
                 };
         models.item.create(data).then(newitem => {
             console.log(newitem);
